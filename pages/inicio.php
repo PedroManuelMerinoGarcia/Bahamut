@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="inicio.css" />
+    <link rel="stylesheet" href="../css/inicio.css" />
     <title>Login</title>
 
     <style>
@@ -38,7 +38,7 @@
                 session_start();
 
                 if (isset($_SESSION["nombre"])) {
-                    header("Location: index.php");
+                    header("Location: ../index.php");
                     exit();
                 }
                 ?>

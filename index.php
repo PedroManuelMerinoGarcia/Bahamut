@@ -7,7 +7,7 @@ try {
     session_start();
 
     if (!isset($_SESSION['nombre'])) {
-        header("Location: inicio.php");
+        header("Location: pages/inicio.php");
         exit;
     }
 
@@ -129,7 +129,7 @@ try {
                             </li>
 
                             <li class="sidebar-item">
-                                <a href="sobre_nosotros.php" class="sidebar-link">
+                                <a href="pages/sobre_nosotros.php" class="sidebar-link">
                                     <i class="bi bi-diagram-3-fill"></i>
                                     <span class="align-middle">Sobre Nosotros</span>
                                 </a>
@@ -138,14 +138,14 @@ try {
                             <li class="sidebar-header">Servicios</li>
 
                             <li class="sidebar-item">
-                                <a href="conexionesMaquina.php" class="sidebar-link">
+                                <a href="pages/conexionesMaquina.php" class="sidebar-link">
                                     <i class="bi bi-diagram-3-fill"></i>
                                     <span class="align-middle">Conexiones</span>
                                 </a>
                             </li>
 
                             <li class="sidebar-item">
-                                <a href="usuarios.php" class="sidebar-link">
+                                <a href="pages/usuarios.php" class="sidebar-link">
                                     <i class="bi bi-people-fill"></i>
                                     <span class="align-middle">Usuarios</span>
                                 </a>
@@ -156,14 +156,14 @@ try {
                                 <li class="sidebar-header"><?= htmlspecialchars($nombreUsuario) ?></li>
 
                                 <li class="sidebar-item">
-                                    <a href="modificaciones.php" class="sidebar-link">
+                                    <a href="pages/modificaciones.php" class="sidebar-link">
                                         <i class="bi bi-gear-fill"></i>
                                         <span class="align-middle">Modificaciones</span>
                                     </a>
                                 </li>
 
                                 <li class="sidebar-item">
-                                    <a href="permisos.php" class="sidebar-link">
+                                    <a href="pages/permisos.php" class="sidebar-link">
                                         <i class="bi bi-person-gear"></i>
                                         <span class="align-middle">Permisos</span>
                                     </a>
@@ -174,7 +174,7 @@ try {
                 </div>
 
                 <div class="sidebar-item logout-item">
-                    <a href="desconexion.php" class="sidebar-link">
+                    <a href="pages/desconexion.php" class="sidebar-link">
                         <i class="bi bi-box-arrow-left"></i>
                         <span class="align-middle">Desconectarse</span>
                     </a>
@@ -329,7 +329,7 @@ try {
                                     <a href="#" class="dropdown-item">
                                         Configuraciones y privacidad
                                     </a>
-                                    <a href="desconexion.php" class="dropdown-item">
+                                    <a href="pages/desconexion.php" class="dropdown-item">
                                         Desconectarse
                                     </a>
                                 </div>

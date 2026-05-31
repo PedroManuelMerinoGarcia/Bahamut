@@ -4,7 +4,7 @@
 // autor: noe jefferson chavarry llerenas
 
 session_start();
-require_once("conexion.php"); // conexión PDO
+require_once("../conexion.php"); // conexión PDO
 
 header('Content-Type: application/json; charset=utf-8');
 

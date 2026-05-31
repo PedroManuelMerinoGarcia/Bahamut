@@ -3,7 +3,7 @@
 //autor: pedro manuel merino garcia
 //autor: noe jefferson chavarry llerenas
 try {
-    include 'conexion.php';
+    include '../conexion.php';
     session_start();
 
     if (!isset($_SESSION['nombre'])) {
@@ -55,12 +55,12 @@ try {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>TitanFortress</title>
-        <link rel="stylesheet" href="css/index.css">
+        <link rel="stylesheet" href="../css/index.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
             integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-        <link rel="stylesheet" href="css/usuarios.css">
+        <link rel="stylesheet" href="../css/usuarios.css">
     </head>
 
     <body>
@@ -71,7 +71,7 @@ try {
                     <div class="scrollbar-container h-100 w-100 d-flex justify-content-center flex-column">
                         <a href="#"
                             class="sidebar-brand d-flex justify-content-center align-items-center gap-1 py-2 text-center">
-                            <img src="img/logo.png" alt="titan" class="logo">
+                            <img src="../img/logo.png" alt="titan" class="logo">
                             <span class="align-middle me-3 text-uppercase text-white fw-bold fs-9 p-2">TitanFortress</span>
                         </a>
 
@@ -237,15 +237,15 @@ try {
                                 <div class="dropdown">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" id="languageDropdown"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                        <img src="img/españa.webp" alt="España" width="20" class="me-1"> Español
+                                        <img src="../img/españa.webp" alt="España" width="20" class="me-1"> Español
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="languageDropdown">
                                         <li><a class="dropdown-item language-option" href="#" data-lang="es"><img
-                                                    src="img/españa.webp" width="20" class="me-1"> Español</a></li>
+                                                    src="../img/españa.webp" width="20" class="me-1"> Español</a></li>
                                         <li><a class="dropdown-item language-option" href="#" data-lang="en"><img
-                                                    src="img/Ingles.webp" width="20" class="me-1"> Inglés</a></li>
+                                                    src="../img/Ingles.webp" width="20" class="me-1"> Inglés</a></li>
                                         <li><a class="dropdown-item language-option" href="#" data-lang="de"><img
-                                                    src="img/aleman.webp" width="20" class="me-1"> Alemán</a></li>
+                                                    src="../img/aleman.webp" width="20" class="me-1"> Alemán</a></li>
                                     </ul>
                                 </div>
 
@@ -267,7 +267,7 @@ try {
                                 </span>
                                 <span class="d-none d-sm-inline-block nav-icon" aria-expanded="true">
                                     <a href="#" class="nav-link dropdown-toggle" aria-expanded="false">
-                                        <img src="img/usuarios/<?= $imagenUsuario ?>" class="imgUSU">
+                                        <img src="../img/usuarios/<?= $imagenUsuario ?>" class="imgUSU">
                                         <span><?= htmlspecialchars($nombreUsuario) ?></span>
                                     </a>
                                 </span>
@@ -312,7 +312,7 @@ try {
                                                 <div class="d-flex align-items-start">
                                                     <div class="flex-grow-1 d-flex flex-column align-items-center">
                                                         <div>
-                                                            <img src="img/nosotros/vpn.png" alt="vpn"
+                                                            <img src="../img/nosotros/vpn.png" alt="vpn"
                                                                 class="img-fluid illustration-img img-small">
                                                         </div>
                                                         <br>
@@ -334,7 +334,7 @@ try {
                                                 <div class="d-flex align-items-start">
                                                     <div class="flex-grow-1 d-flex flex-column align-items-center">
                                                         <div>
-                                                            <img src="img/nosotros/rdp.png" alt="vpn"
+                                                            <img src="../img/nosotros/rdp.png" alt="vpn"
                                                                 class="img-fluid illustration-img img-small">
                                                         </div>
                                                         <br>
@@ -356,7 +356,7 @@ try {
                                                 <div class="d-flex align-items-start">
                                                     <div class="flex-grow-1 d-flex flex-column align-items-center">
                                                         <div>
-                                                            <img src="img/nosotros/red.png" alt="vpn"
+                                                            <img src="../img/nosotros/red.png" alt="vpn"
                                                                 class="img-fluid illustration-img img-small">
                                                         </div>
                                                         <br>
@@ -378,7 +378,7 @@ try {
                                                 <div class="d-flex align-items-start">
                                                     <div class="flex-grow-1 d-flex flex-column align-items-center">
                                                         <div>
-                                                            <img src="img/nosotros/asistencia.png" alt="vpn"
+                                                            <img src="../img/nosotros/asistencia.png" alt="vpn"
                                                                 class="img-fluid illustration-img img-small">
                                                         </div>
                                                         <br>
@@ -490,7 +490,7 @@ try {
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
                         integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
                         crossorigin="anonymous"></script>
-                    <script src="js/navegador.js"></script>
+                    <script src="../js/navegador.js"></script>
                     <script>
                         const toggle = document.getElementById('toggle');
                         const sidebar = document.querySelector('.sidebar');

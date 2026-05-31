@@ -3,7 +3,7 @@
 //autor: pedro manuel merino garcia
 //autor: noe jefferson chavarry llerenas
 try {
-    include 'conexion.php';
+    include '../conexion.php';
     session_start();
 
     if (!isset($_SESSION['nombre'])) {
@@ -12,32 +12,6 @@ try {
     }
 
     $nombreUsuario = $_SESSION['nombre'];
-    $idUsuario = $_SESSION['usuario_id'];
-    $rolUsuario = $_SESSION['rol_usuario'];
-
-    $isAdmin = ($rolUsuario === 'administrador');
-    $tienePermisoPassword = ($rolUsuario === 'usuario_permisos' || $isAdmin);
-
-    // Obtener usuarios (todos si es admin, solo él mismo si no)
-    $usuarios = [];
-
-    if ($isAdmin) {
-        $sql = "SELECT u.id, u.nombre_usuario, u.correo_electronico, u.contraseña, u.creado_en, r.nombre AS rol
-            FROM usuarios u
-            JOIN roles r ON u.id_rol = r.id";
-        $stmt = $conn->prepare($sql);
-    } else {
-        $sql = "SELECT u.id, u.nombre_usuario, u.correo_electronico, u.contraseña, u.creado_en, r.nombre AS rol
-            FROM usuarios u
-            JOIN roles r ON u.id_rol = r.id
-            WHERE u.id = :id";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':id', $idUsuario, PDO::PARAM_INT);
-    }
-
-    $stmt->execute();
-    $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
     //imagen
     $usuario_id = $_SESSION['usuario_id']; // con "usuario_id", no "id_usuario"
 
@@ -45,9 +19,29 @@ try {
     $stmtImagen = $conn->prepare($sqlImagen);
     $stmtImagen->execute([':id' => $usuario_id]);
     $imagenUsuario = $stmtImagen->fetchColumn();
-    //
-    ?>
 
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $id_usuario = $_POST['id_usuario'];
+
+        // Obtener máquinas no asociadas
+        $stmt = $conn->prepare("SELECT id, nombre FROM maquinas 
+                           WHERE id NOT IN (
+                               SELECT id_maquina FROM permisos_usuarios_maquinas WHERE id_usuario = ?
+                           )");
+        $stmt->execute([$id_usuario]);
+        $maquinas_disponibles = $stmt->fetchAll();
+
+        // Si no hay ninguna disponible, redirige con alerta
+        if (empty($maquinas_disponibles)) {
+            echo "<script>
+                alert('El usuario ya tiene todas las máquinas asociadas.');
+                window.location.href = 'permisos.php';
+              </script>";
+            exit;
+        }
+    }
+    ?>
     <!DOCTYPE html>
     <html lang="es">
 
@@ -55,23 +49,23 @@ try {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>TitanFortress</title>
-        <link rel="stylesheet" href="css/index.css">
+        <link rel="stylesheet" href="../css/index.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
             integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-        <link rel="stylesheet" href="css/usuarios.css">
     </head>
 
     <body>
         <div class="wrapper w-100 d-flex align-items-start justify-content-between bg-black">
+            <!--Navegador Vertical ¡-->
             <!-- Navegador Vertical -->
             <nav class="sidebar position-relative">
                 <div class="sidebar-content w-100">
                     <div class="scrollbar-container h-100 w-100 d-flex justify-content-center flex-column">
                         <a href="#"
                             class="sidebar-brand d-flex justify-content-center align-items-center gap-1 py-2 text-center">
-                            <img src="img/logo.png" alt="titan" class="logo">
+                            <img src="../img/logo.png" alt="titan" class="logo">
                             <span class="align-middle me-3 text-uppercase text-white fw-bold fs-9 p-2">TitanFortress</span>
                         </a>
 
@@ -146,6 +140,62 @@ try {
                     </span>
                     <div class="navbar-collapse collapse">
                         <div class="navbar-align navbar-nav ms-auto">
+                            <!--Mensajes ¡-->
+                            <div class="me-2 nav-item dropdown d-flex position-relative">
+                                <a id="element" class="d-flex align-items-center nav-link nav-icon dropdown-toggle"
+                                    aria-expanded="true">
+                                    <div class="position-relative">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                            class="bi bi-chat" viewBox="0 0 16 16">
+                                            <path
+                                                d="M2.678 11.894a1 1 0 0 1 .287.801 11 11 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8 8 0 0 0 8 14c3.996 0 7-2.807 7-6s-3.004-6-7-6-7 2.808-7 6c0 1.468.617 2.83 1.678 3.894m-.493 3.905a22 22 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a10 10 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105" />
+                                        </svg>
+                                        <span class="indicator">2</span>
+                                    </div>
+                                </a>
+                                <div class="dropdown-menu-lg py-0 dropdown-menu dropdown-menu-end" data-bs-popper="static">
+                                    <div class="w-100 position-relative text-center dropdown-menu-header">2 Nuevos Mensajes
+                                    </div>
+                                    <div class="list-group d-flex g-5">
+                                        <div class="list-group-item">
+                                            <div class="align-items-center g-0 row">
+                                                <div class="col-2">
+                                                    <img class="avatar img-fluid rounded.circle"
+                                                        src="../img/usuarios/admin.jpeg" alt="Christian">
+                                                </div>
+                                                <div class="ps-2 col-10">
+                                                    <div class="dropdown-menu-header p-0 fw-500">Chritian</div>
+                                                    <p class="text-muted small mt-1">
+                                                        ¿Como va la pagina?, ¿has progresado?.
+                                                    </p>
+                                                    <div class="text-muted small mt-1">
+                                                        Hace 15 min
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <div class="align-items-center g-0 row">
+                                                <div class="col-2">
+                                                    <img class="avatar img-fluid rounded.circle"
+                                                        src="../img/usuarios/usuario1.jpeg" alt="Pedro">
+                                                </div>
+                                                <div class="ps-2 col-10">
+                                                    <div class="dropdown-menu-header p-0 fw-500">Pedro</div>
+                                                    <p class="text-muted small mt-1">
+                                                        No veas, tremenda batalla he tenido en el baño.
+                                                    </p>
+                                                    <div class="text-muted small mt-1">
+                                                        Hace 40 min
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-100 position-relative text-center dropdown-menu-footer">Ver todos los
+                                        mensajes</div>
+                                </div>
+                            </div>
                             <!--Notificaciones ¡-->
                             <div class="me-2 nav-item dropdown d-flex position-relative">
                                 <a id="element" class="d-flex align-items-center nav-link nav-icon dropdown-toggle"
@@ -197,7 +247,7 @@ try {
                                                 </div>
                                                 <div class="ps-2 col-10">
                                                     <div class="dropdown-menu-header p-0 fw-500">Conexión desde la IP
-                                                        192.168.1.156</div>
+                                                        192.123.1.1</div>
                                                     <div class="text-muted small mt-1">
                                                         Hace 1 hora
                                                     </div>
@@ -232,19 +282,20 @@ try {
                             <!--Idiomas ¡-->
                             <a href="#" type="button" class="nav-icon modes nav-link d-flex align-items-center"></a>
                             <div class="me-2 nav-item dropdown d-flex position-relative">
+
                                 <!-- Dropdown personalizado para seleccionar idioma -->
                                 <div class="dropdown">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" id="languageDropdown"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                        <img src="img/españa.webp" alt="España" width="20" class="me-1"> Español
+                                        <img src="../img/españa.webp" alt="España" width="20" class="me-1"> Español
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="languageDropdown">
                                         <li><a class="dropdown-item language-option" href="#" data-lang="es"><img
-                                                    src="img/españa.webp" width="20" class="me-1"> Español</a></li>
+                                                    src="../img/españa.webp" width="20" class="me-1"> Español</a></li>
                                         <li><a class="dropdown-item language-option" href="#" data-lang="en"><img
-                                                    src="img/Ingles.webp" width="20" class="me-1"> Inglés</a></li>
+                                                    src="../img/Ingles.webp" width="20" class="me-1"> Inglés</a></li>
                                         <li><a class="dropdown-item language-option" href="#" data-lang="de"><img
-                                                    src="img/aleman.webp" width="20" class="me-1"> Alemán</a></li>
+                                                    src="../img/aleman.webp" width="20" class="me-1"> Alemán</a></li>
                                     </ul>
                                 </div>
 
@@ -265,7 +316,7 @@ try {
                                 </span>
                                 <span class="d-none d-sm-inline-block nav-icon" aria-expanded="true">
                                     <a href="#" class="nav-link dropdown-toggle" aria-expanded="false">
-                                        <img src="img/usuarios/<?= $imagenUsuario ?>" class="imgUSU">
+                                        <img src="../img/usuarios/<?= $imagenUsuario ?>" class="imgUSU">
                                         <span><?= htmlspecialchars($nombreUsuario) ?></span>
                                     </a>
                                 </span>
@@ -284,9 +335,10 @@ try {
                                     <a href="#" class="dropdown-item">
                                         Configuraciones y privacidad
                                     </a>
-                                    <a href="desconexion.php" class="dropdown-item">
-                                        Desconectarse
+                                    <a href="#" class="dropdown-item">
+                                        Ayuda
                                     </a>
+                                    <a href="desconexion.php">Desconectarse</a>
                                 </div>
                             </div>
                         </div>
@@ -296,171 +348,115 @@ try {
                     <div class="p-0 container-fluid">
                         <div class="mb-2 mb-xl-2 row">
                             <div class="d-none d-sm-block col-auto">
-                                <h3>Usuarios Titan Fortress</h3>
+                                <h3>Asignar nueva maquina al usuario: </h3>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="w-100">
-                                <div class="illustration card border-0 w-100" style="background-color: #e0eafc;">
-                                    <div class="card-body w-100">
-                                        <div class="usuarios-container w-100">
-                                            <div class="contenido" style="overflow-x: auto; width: 100%;">
-                                                <table class="tabla_resultados w-100">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Nombre</th>
-                                                            <th>Correo</th>
-                                                            <th>Rol</th>
-                                                            <th>Creado en</th>
-                                                            <?php if ($tienePermisoPassword): ?>
-                                                                <th>Password</th>
-                                                            <?php endif; ?>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php foreach ($usuarios as $index => $u): ?>
-                                                            <tr>
-                                                                <td><?= htmlspecialchars($u['nombre_usuario']) ?></td>
-                                                                <td><?= htmlspecialchars($u['correo_electronico']) ?></td>
-                                                                <td><?= htmlspecialchars($u['rol']) ?></td>
-                                                                <td><?= htmlspecialchars($u['creado_en']) ?></td>
-                                                                <?php if ($tienePermisoPassword): ?>
-                                                                    <td>
-                                                                        <span id="pass<?= $index ?>" style="display: none;">
-                                                                            <?= htmlspecialchars($u['contraseña']) ?>
-                                                                        </span>
-                                                                        <button id="btn<?= $index ?>"
-                                                                            onclick="verPassword(<?= $index ?>)"
-                                                                            class="boton_ver">VER</button>
-                                                                        <span id="timer<?= $index ?>"
-                                                                            style="margin-left: 10px; display: none; color: #a41515;"></span>
-                                                                    </td>
-                                                                <?php endif; ?>
-                                                            </tr>
-                                                        <?php endforeach; ?>
-                                                    </tbody>
-                                                </table>
 
-                                                <!-- JavaScript para mostrar la contraseña -->
-                                                <script>
-                                                    function verPassword(index) {
-                                                        const passSpan = document.getElementById(`pass${index}`);
-                                                        const btn = document.getElementById(`btn${index}`);
-                                                        const timer = document.getElementById(`timer${index}`);
-
-                                                        let seconds = 5;
-                                                        timer.textContent = `Ocultando en ${seconds}s`;
-                                                        timer.style.display = "inline";
-                                                        passSpan.style.display = "inline";
-                                                        btn.style.display = "none";
-
-                                                        const interval = setInterval(() => {
-                                                            seconds--;
-                                                            if (seconds > 0) {
-                                                                timer.textContent = `Ocultando en ${seconds}s`;
-                                                            } else {
-                                                                clearInterval(interval);
-                                                                passSpan.style.display = "none";
-                                                                btn.style.display = "inline";
-                                                                timer.style.display = "none";
-                                                            }
-                                                        }, 1000);
-                                                    }
-                                                </script>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <form action="guardar_asignacion.php" method="post">
+                            <input type="hidden" name="id_usuario" value="<?= $id_usuario ?>">
+                            <div class="mb-3">
+                                <label for="id_maquina" class="form-label">Máquina disponible:</label>
+                                <select name="id_maquina" class="form-select" required>
+                                    <?php foreach ($maquinas_disponibles as $m): ?>
+                                        <option value="<?= $m['id'] ?>"><?= htmlspecialchars($m['nombre']) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
+                            <div class="mb-3">
+                                <label for="nivel_permiso" class="form-label">Permiso:</label>
+                                <select name="nivel_permiso" class="form-select" required>
+                                    <option value="conectar">Conectar</option>
+                                    <option value="ver_credenciales">Ver Credenciales</option>
+                                    <option value="administrar">Administrar</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Asignar</button>
+                        </form>
+                    </div>
+                </div>
 
+                <footer class="footer bg-white py-3">
+                    <div class="container-fluid">
+                        <div class="text-muted row">
+                            <div class="text-start d-flex col-6">
+                                <ul class="list-inline mb-0">
+                                    <li class="list-inline-item"><a href="#" class="text-muted">Support</a></li>
+                                    <li class="list-inline-item"><a href="#" class="text-muted">Centro de ayuda</a></li>
+                                    <li class="list-inline-item"><a href="#" class="text-muted">Política de privacidad</a>
+                                    </li>
+                                    <li class="list-inline-item"><a href="#" class="text-muted">Términos y condiciones</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="text-end col-6">
+                                <p class="mb-0">Copyright © 2025 Tintan Fortress - All rights reserved <a href="#"
+                                        class="text-muted">DataSphere</a></p>
+                            </div>
                         </div>
                     </div>
-
-                    <footer class="footer bg-white py-3">
-                        <div class="container-fluid">
-                            <div class="text-muted row">
-                                <div class="text-start d-flex col-6">
-                                    <ul class="list-inline mb-0">
-                                        <li class="list-inline-item"><a href="#" class="text-muted">Support</a></li>
-                                        <li class="list-inline-item"><a href="#" class="text-muted">Centro de ayuda</a></li>
-                                        <li class="list-inline-item"><a href="#" class="text-muted">Política de
-                                                privacidad</a>
-                                        </li>
-                                        <li class="list-inline-item"><a href="#" class="text-muted">Términos y
-                                                condiciones</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="text-end col-6">
-                                    <p class="mb-0">Copyright © 2025 Tintan Fortress - All rights reserved <a href="#"
-                                            class="text-muted">DataSphere</a></p>
-                                </div>
-                            </div>
-                        </div>
-                    </footer>
-                </div>
+                </footer>
             </div>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
-            <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-            <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-            <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-                integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-                crossorigin="anonymous"></script>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
-                integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
-                crossorigin="anonymous"></script>
-            <script src="js/navegador.js"></script>
-            <script>
-                const toggle = document.getElementById('toggle');
-                const sidebar = document.querySelector('.sidebar');
-                const main = document.querySelector('.main');
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
+            integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
+            crossorigin="anonymous"></script>
+        <script src="../js/navegador.js"></script>
+        <script>
+            const toggle = document.getElementById('toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const main = document.querySelector('.main');
 
-                toggle.addEventListener('click', function () {
-                    sidebar.classList.toggle('collapsed');
-                })
+            toggle.addEventListener('click', function () {
+                sidebar.classList.toggle('collapsed');
+            })
 
-            </script>
-            <!--TRADUCTOR -->
-            <script type="text/javascript">
-                function googleTranslateElementInit() {
-                    new google.translate.TranslateElement({
-                        pageLanguage: 'es',
-                        includedLanguages: 'es,en,de',
-                        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                        autoDisplay: false
-                    }, 'google_translate_element');
+        </script>
+        <!--TRADUCTOR -->
+        <script type="text/javascript">
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'es',
+                    includedLanguages: 'es,en,de',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                    autoDisplay: false
+                }, 'google_translate_element');
+            }
+        </script>
+        <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+        <script>
+            // Cambiar idioma y guardar cookie googtrans sin domain (más compatible)
+            document.querySelectorAll('.language-option').forEach(function (element) {
+                element.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var lang = this.getAttribute('data-lang');
+                    document.cookie = "googtrans=/es/" + lang + "; path=/;";
+                    location.reload();
+                });
+            });
+
+            // Ajustar posición del body cuando el banner aparece o desaparece
+            const observer = new MutationObserver(() => {
+                const banner = document.querySelector('iframe.goog-te-banner-frame');
+                if (banner) {
+                    document.body.style.top = '40px'; // Altura del banner estilizado
+                    document.body.style.position = 'relative';
+                } else {
+                    document.body.style.top = '0';
+                    document.body.style.position = 'static';
                 }
-            </script>
-            <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            });
 
-            <script>
-                // Cambiar idioma y guardar cookie googtrans sin domain (más compatible)
-                document.querySelectorAll('.language-option').forEach(function (element) {
-                    element.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        var lang = this.getAttribute('data-lang');
-                        document.cookie = "googtrans=/es/" + lang + "; path=/;";
-                        location.reload();
-                    });
-                });
-
-                // Ajustar posición del body cuando el banner aparece o desaparece
-                const observer = new MutationObserver(() => {
-                    const banner = document.querySelector('iframe.goog-te-banner-frame');
-                    if (banner) {
-                        document.body.style.top = '40px'; // Altura del banner estilizado
-                        document.body.style.position = 'relative';
-                    } else {
-                        document.body.style.top = '0';
-                        document.body.style.position = 'static';
-                    }
-                });
-
-                observer.observe(document.body, { childList: true, subtree: true });
-            </script>
+            observer.observe(document.body, { childList: true, subtree: true });
+        </script>
     </body>
 
     </html>

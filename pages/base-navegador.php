@@ -2,7 +2,7 @@
 //autor: christian adrian pereira 
 //autor: pedro manuel merino garcia
 //autor: noe jefferson chavarry llerenas
-include 'conexion.php';
+include '../conexion.php';
 
 
 ?>
@@ -12,7 +12,7 @@ include 'conexion.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TitanFortress</title>
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="../css/index.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -24,7 +24,7 @@ include 'conexion.php';
             <div class="sidebar-content w-100">
                 <div class="scrollbar-container h-100 w-100 d-flex justify-content-center flex-column">
                     <a href="#" class="sidebar-brand d-flex justify-content-center align-items-center gap-1 py-2 text-center">
-                        <img src="img/logo.png" alt="titan" class="logo">
+                        <img src="../img/logo.png" alt="titan" class="logo">
                         <span class="align-middel me-3 text-uppercase text-while fw-bold fs-9 p-2">TitanFortress</span>
                     </a>
                     <ul class="sidebar-nav position-relative w-100">
@@ -113,7 +113,7 @@ include 'conexion.php';
                                     <div class="list-group-item">
                                         <div class="align-items-center g-0 row">
                                             <div class="col-2">
-                                                <img class="avatar img-fluid rounded.circle" src="img/usuarios/admin.jpeg" alt="Christian">
+                                                <img class="avatar img-fluid rounded.circle" src="../img/usuarios/admin.jpeg" alt="Christian">
                                             </div>
                                             <div class="ps-2 col-10">
                                                 <div class="dropdown-menu-header p-0 fw-500">Chritian</div>
@@ -129,7 +129,7 @@ include 'conexion.php';
                                     <div class="list-group-item">
                                         <div class="align-items-center g-0 row">
                                             <div class="col-2">
-                                                <img class="avatar img-fluid rounded.circle" src="img/usuarios/usuario1.jpeg" alt="Pedro">
+                                                <img class="avatar img-fluid rounded.circle" src="../img/usuarios/usuario1.jpeg" alt="Pedro">
                                             </div>
                                             <div class="ps-2 col-10">
                                                 <div class="dropdown-menu-header p-0 fw-500">Pedro</div>
@@ -218,20 +218,20 @@ include 'conexion.php';
                         <div class="me-2 nav-item dropdown d-flex position-relative">
                             <a id="element" class="nav-flag d-flex align-items-center nav-icon nav-link  dropdown-toggle" aria-expanded="true">
                                 <div class="position-relative">
-                                    <img src="img/españa.webp" alt="" class="img-fluid">
+                                    <img src="../img/españa.webp" alt="" class="img-fluid">
                                 </div>
                             </a>
                             <div class="dropdown-menu-lg py-0 dropdown-menu dropdown-menu-end" data-bs-popper="static" aria-labelledby="element" style="width: 150px;">
                                 <a href="#" class="dropdown-item">
-                                    <img src="img/españa.webp" alt="espana" width="20" class="align-middle me-1">
+                                    <img src="../img/españa.webp" alt="espana" width="20" class="align-middle me-1">
                                     <span class="align-middle">España</span>
                                 </a>
                                 <a href="#" class="dropdown-item">
-                                    <img src="img/Ingles.webp" alt="ingles" width="20" class="align-middle me-1">
+                                    <img src="../img/Ingles.webp" alt="ingles" width="20" class="align-middle me-1">
                                     <span class="align-middle">Ingles</span>
                                 </a>
                                 <a href="#" class="dropdown-item">
-                                    <img src="img/aleman.webp" alt="aleman" width="20" class="align-middle me-1">
+                                    <img src="../img/aleman.webp" alt="aleman" width="20" class="align-middle me-1">
                                     <span class="align-middle">Aleman</span>
                                 </a>
                             </div>
@@ -247,7 +247,7 @@ include 'conexion.php';
                             </span>
                             <span class="d-none d-sm-inline-block nav-icon" aria-expanded="true">
                                 <a href="#" class="nav-link dropdown-toggle" aria-expanded="false">
-                                    <img src="img/usuarios/admin.jpeg" alt="admin" class="avatar img-fluid rounded-circle me-1" width="40" height="40">
+                                    <img src="../img/usuarios/admin.jpeg" alt="admin" class="avatar img-fluid rounded-circle me-1" width="40" height="40">
                                     <span>Admin</span>
                                 </a>
                             </span>
@@ -318,7 +318,7 @@ include 'conexion.php';
     <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js" integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D" crossorigin="anonymous"></script>
-    <script src="js/navegador.js"></script>
+    <script src="../js/navegador.js"></script>
     <script>
             const toggle = document.getElementById('toggle');
             const sidebar = document.querySelector('.sidebar');

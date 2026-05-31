@@ -2,7 +2,7 @@
 //autor: christian adrian pereira 
 //autor: pedro manuel merino garcia
 //autor: noe jefferson chavarry llerenas
-include 'conexion.php';
+include '../conexion.php';
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];

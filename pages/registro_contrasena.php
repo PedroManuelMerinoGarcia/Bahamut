@@ -8,8 +8,8 @@
     <meta name="author" content="christian adrian pereira" />
     <meta name="author" content="pedro manuel merino garcia" />
     <meta name="author" content="noe jefferson chavarry llerenas" />
-    <link rel="stylesheet" href="inicio.css" />
-    <link rel="stylesheet" href="contrasena.css" />
+    <link rel="stylesheet" href="../css/inicio.css" />
+    <link rel="stylesheet" href="../css/contrasena.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet" />

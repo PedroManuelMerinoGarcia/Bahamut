@@ -3,7 +3,7 @@
 //autor: pedro manuel merino garcia
 //autor: noe jefferson chavarry llerenas
 try {
-    include 'conexion.php';
+    include '../conexion.php';
     session_start();
 
     if (!isset($_SESSION['nombre']) || !isset($_SESSION['usuario_id'])) {
@@ -15,6 +15,7 @@ try {
     $usuario_id = $_SESSION['usuario_id'];
 
     $isAdmin = (isset($_SESSION['rol_usuario']) && $_SESSION['rol_usuario'] === 'administrador');
+
 
     //imagen
     $usuario_id = $_SESSION['usuario_id']; // con "usuario_id", no "id_usuario"
@@ -31,7 +32,7 @@ try {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>TitanFortress</title>
-        <link rel="stylesheet" href="css/index.css">
+        <link rel="stylesheet" href="../css/index.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
             integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
@@ -47,7 +48,7 @@ try {
                     <div class="scrollbar-container h-100 w-100 d-flex justify-content-center flex-column">
                         <a href="#"
                             class="sidebar-brand d-flex justify-content-center align-items-center gap-1 py-2 text-center">
-                            <img src="img/logo.png" alt="titan" class="logo">
+                            <img src="../img/logo.png" alt="titan" class="logo">
                             <span class="align-middle me-3 text-uppercase text-white fw-bold fs-9 p-2">TitanFortress</span>
                         </a>
 
@@ -213,15 +214,15 @@ try {
                                 <div class="dropdown">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" id="languageDropdown"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                        <img src="img/españa.webp" alt="España" width="20" class="me-1"> Español
+                                        <img src="../img/españa.webp" alt="España" width="20" class="me-1"> Español
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="languageDropdown">
                                         <li><a class="dropdown-item language-option" href="#" data-lang="es"><img
-                                                    src="img/españa.webp" width="20" class="me-1"> Español</a></li>
+                                                    src="../img/españa.webp" width="20" class="me-1"> Español</a></li>
                                         <li><a class="dropdown-item language-option" href="#" data-lang="en"><img
-                                                    src="img/Ingles.webp" width="20" class="me-1"> Inglés</a></li>
+                                                    src="../img/Ingles.webp" width="20" class="me-1"> Inglés</a></li>
                                         <li><a class="dropdown-item language-option" href="#" data-lang="de"><img
-                                                    src="img/aleman.webp" width="20" class="me-1"> Alemán</a></li>
+                                                    src="../img/aleman.webp" width="20" class="me-1"> Alemán</a></li>
                                     </ul>
                                 </div>
 
@@ -242,7 +243,7 @@ try {
                                 </span>
                                 <span class="d-none d-sm-inline-block nav-icon" aria-expanded="true">
                                     <a href="#" class="nav-link dropdown-toggle" aria-expanded="false">
-                                        <img src="img/usuarios/<?= $imagenUsuario ?>" class="imgUSU">
+                                        <img src="../img/usuarios/<?= $imagenUsuario ?>" class="imgUSU">
                                         <span><?= htmlspecialchars($nombreUsuario) ?></span>
                                     </a>
                                 </span>
@@ -264,7 +265,6 @@ try {
                                     <a href="desconexion.php" class="dropdown-item">
                                         Desconectarse
                                     </a>
-
                                 </div>
                             </div>
                         </div>
@@ -274,84 +274,137 @@ try {
                     <div class="p-0 container-fluid">
                         <div class="mb-2 mb-xl-2 row">
                             <div class="d-none d-sm-block col-auto">
-                                <h3>Permisos de Usuarios sobre Máquinas</h3>
+                                <h3>Gestión de Máquinas y Usuarios</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="d-flex col-xxl-3 col-sm-6">
+                                <div class="illustration flex-fill card border-0" style="background-color: #e0eafc;">
+                                    <div class="p-0 d-flex flex-fill card-body">
+                                        <div class="g-0 w-100 row">
+                                            <div class="col-6">
+                                                <h4 class="illustration-text p-3 m-1">Bienvenido Admin</h4>
+                                                <p class="mb-0">Supervisión</p>
+                                            </div>
+                                            <div class="align-self-end text-end col-6">
+                                                <img src="../img/persona.png" alt="persona" class="img-fluid illustration-img">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
+                        <div class="mb-2 mb-xl-2 row">
+                            <div class="d-none d-sm-block col-auto">
+                                <h3>Máquinas</h3>
+                            </div>
+                        </div>
                         <table class="table table-bordered">
                             <thead class="table-dark">
                                 <tr>
+                                    <th>Nombre</th>
+                                    <th>IP</th>
+                                    <th>Puerto</th>
+                                    <th>Descripción</th>
                                     <th>Usuario</th>
-                                    <th>Máquinas asociadas</th>
-                                    <th>Permiso y acciones</th>
+                                    <th>Contraseña</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $usuarios = $conn->query("SELECT id, nombre_usuario FROM usuarios")->fetchAll();
-
-                                foreach ($usuarios as $usuario):
-                                    $id_usuario = $usuario['id'];
-                                    $nombre_usuario = htmlspecialchars($usuario['nombre_usuario']);
-
-                                    $stmt = $conn->prepare("SELECT p.id_maquina, m.nombre, p.nivel_permiso
-                             FROM permisos_usuarios_maquinas p
-                             JOIN maquinas m ON p.id_maquina = m.id
-                             WHERE p.id_usuario = ?");
-                                    $stmt->execute([$id_usuario]);
-                                    $permisos = $stmt->fetchAll();
+                                $stmt = $conn->query("SELECT m.id, m.nombre, m.direccion_ip, m.puerto ,  m.descripcion, c.usuario_maquina, c.contraseña 
+                             FROM maquinas m 
+                             LEFT JOIN credenciales c ON m.id = c.id_maquina");
+                                while ($fila = $stmt->fetch(PDO::FETCH_ASSOC)):
                                     ?>
                                     <tr>
-                                        <td><?= $nombre_usuario ?></td>
-
-                                        <!-- Celda de máquinas asociadas -->
-                                        <td>
-                                            <?php foreach ($permisos as $perm): ?>
-                                                <div class="mb-2"><?= htmlspecialchars($perm['nombre']) ?></div>
-                                            <?php endforeach; ?>
-                                        </td>
-
-                                        <!-- Celda de permisos y botones juntos -->
-                                        <td>
-                                            <?php foreach ($permisos as $perm): ?>
-                                                <form class="d-flex align-items-center mb-2" action="editar_permisos.php"
-                                                    method="post">
-                                                    <input type="hidden" name="id_usuario" value="<?= $id_usuario ?>">
-                                                    <input type="hidden" name="id_maquina" value="<?= $perm['id_maquina'] ?>">
-
-                                                    <select name="nivel_permiso" class="form-select form-select-sm w-auto me-2">
-                                                        <option value="conectar" <?= $perm['nivel_permiso'] === 'conectar' ? 'selected' : '' ?>>Conectar</option>
-                                                        <option value="ver_credenciales"
-                                                            <?= $perm['nivel_permiso'] === 'ver_credenciales' ? 'selected' : '' ?>>Ver
-                                                            Credenciales</option>
-                                                        <option value="administrar" <?= $perm['nivel_permiso'] === 'administrar' ? 'selected' : '' ?>>Administrar</option>
-                                                    </select>
-
-                                                    <button class="btn btn-sm btn-primary me-2" type="submit">Guardar</button>
-
-                                                    <!-- Mismo formulario: acción eliminar -->
-                                                    <button class="btn btn-sm btn-danger" type="submit"
-                                                        formaction="eliminar_relacion.php"
-                                                        onclick="return confirm('¿Eliminar esta máquina del usuario?')">
-                                                        Eliminar
-                                                    </button>
-                                                </form>
-                                            <?php endforeach; ?>
-                                        </td>
-
-                                        <!-- Celda de botón Agregar máquina -->
-                                        <td>
-                                            <form action="asignar_maquina.php" method="post">
-                                                <input type="hidden" name="id_usuario" value="<?= $id_usuario ?>">
-                                                <button type="submit" class="btn btn-sm btn-success">Agregar Máquina</button>
-                                            </form>
-                                        </td>
+                                        <form action="editar_maquina.php" method="post">
+                                            <input type="hidden" name="id" value="<?= $fila['id'] ?>">
+                                            <td><input type="text" name="nombre" class="form-control"
+                                                    value="<?= htmlspecialchars($fila['nombre']) ?>"></td>
+                                            <td><input type="text" name="ip" class="form-control"
+                                                    value="<?= htmlspecialchars($fila['direccion_ip']) ?>"></td>
+                                            <td><input type="text" name="puerto" class="form-control"
+                                                    value="<?= htmlspecialchars($fila['puerto']) ?>"></td>
+                                            <td><input type="text" name="descripcion" class="form-control"
+                                                    value="<?= htmlspecialchars($fila['descripcion']) ?>"></td>
+                                            <td><input type="text" name="usuario" class="form-control"
+                                                    value="<?= htmlspecialchars($fila['usuario_maquina']) ?>"></td>
+                                            <td><input type="text" name="contrasena" class="form-control"
+                                                    value="<?= htmlspecialchars($fila['contraseña']) ?>"></td>
+                                            <td>
+                                                <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                                                <a href="eliminar_maquina.php?id=<?= $fila['id'] ?>"
+                                                    class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('¿Eliminar esta máquina?')">Eliminar</a>
+                                            </td>
+                                        </form>
                                     </tr>
-                                <?php endforeach; ?>
+                                <?php endwhile; ?>
+                                <tr>
+                                    <form action="agregar_maquina.php" method="post">
+                                        <td><input type="text" name="nombre" class="form-control" required></td>
+                                        <td><input type="text" name="ip" class="form-control" required></td>
+                                        <td><input type="text" name="descripcion" class="form-control" required></td>
+                                        <td><input type="text" name="usuario" class="form-control" required></td>
+                                        <td><input type="text" name="contrasena" class="form-control" required></td>
+                                        <td><button type="submit" class="btn btn-sm btn-success">Agregar</button></td>
+                                    </form>
+                                </tr>
                             </tbody>
                         </table>
 
+
+                        <hr>
+                        <div class="mb-2 mb-xl-2 row">
+                            <div class="d-none d-sm-block col-auto">
+                                <h3>Usuarios</h3>
+                            </div>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Nombre de Usuario</th>
+                                    <th>Correo Electrónico</th>
+                                    <th>Contraseña</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $stmtUsuarios = $conn->query("SELECT id, nombre_usuario, correo_electronico, contraseña FROM usuarios");
+                                while ($usuario = $stmtUsuarios->fetch(PDO::FETCH_ASSOC)):
+                                    ?>
+                                    <tr>
+                                        <form action="editar_usuario.php" method="post">
+                                            <input type="hidden" name="id" value="<?= $usuario['id'] ?>">
+                                            <td><input type="text" name="nombre_usuario" class="form-control"
+                                                    value="<?= htmlspecialchars($usuario['nombre_usuario']) ?>"></td>
+                                            <td><input type="email" name="correo" class="form-control"
+                                                    value="<?= htmlspecialchars($usuario['correo_electronico']) ?>"></td>
+                                            <td><input type="text" name="contrasena" class="form-control"
+                                                    value="<?= htmlspecialchars($usuario['contraseña']) ?>"></td>
+                                            <td>
+                                                <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                                                <a href="eliminar_usuario.php?id=<?= $usuario['id'] ?>"
+                                                    class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('¿Eliminar este usuario?')">Eliminar</a>
+                                            </td>
+                                        </form>
+                                    </tr>
+                                <?php endwhile; ?>
+                                <tr>
+                                    <form action="agregar_usuario.php" method="post">
+                                        <td><input type="text" name="nombre_usuario" class="form-control" required></td>
+                                        <td><input type="email" name="correo" class="form-control" required></td>
+                                        <td><input type="text" name="contrasena" class="form-control" required></td>
+                                        <td><button type="submit" class="btn btn-sm btn-success">Agregar</button></td>
+                                    </form>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -388,7 +441,7 @@ try {
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
             integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
             crossorigin="anonymous"></script>
-        <script src="js/navegador.js"></script>
+        <script src="../js/navegador.js"></script>
         <script>
             const toggle = document.getElementById('toggle');
             const sidebar = document.querySelector('.sidebar');
